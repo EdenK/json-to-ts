@@ -40,8 +40,8 @@ export default function JsonToTS(json: any, userOptions?: Options): string[] {
    */
   optimizeTypeStructure(typeStructure);
 
-  const names = getNames(typeStructure, options.rootName).map((nameObj) => {
-    if(options.prefix) {
+  const names = getNames(typeStructure, options.rootName).map((nameObj, i) => {
+    if(options.prefix && i > 0) {
       nameObj.name = `${options.prefix}_${nameObj.name}`
     }
     return nameObj;
