@@ -7,11 +7,13 @@ import {
 } from "./get-interfaces";
 import { getNames } from "./get-names";
 import { isArray, isObject } from "./util";
+import { appendFileSync, readFileSync, writeFileSync } from "fs";
 shim();
 
 export default function JsonToTS(json: any, userOptions?: Options): string[] {
   const defaultOptions: Options = {
-    rootName: "RootObject"
+    rootName: "RootObject",
+    prefix: null
   };
   const options = {
     ...defaultOptions,
@@ -38,7 +40,12 @@ export default function JsonToTS(json: any, userOptions?: Options): string[] {
    */
   optimizeTypeStructure(typeStructure);
 
-  const names = getNames(typeStructure, options.rootName);
+  const names = getNames(typeStructure, options.rootName).map((nameObj) => {
+    if(options.prefix) {
+      nameObj.name = `${options.prefix}_${nameObj.name}`
+    }
+    return nameObj;
+  });
 
   return getInterfaceDescriptions(typeStructure, names).map(
     getInterfaceStringFromDescription

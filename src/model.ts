@@ -34,6 +34,7 @@ export interface InterfaceDescription {
 
 export interface Options {
   rootName: string;
+  prefix: string | null;
 }
 
 export interface KeyMetaData {
