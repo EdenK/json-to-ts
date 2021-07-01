@@ -37,9 +37,29 @@ export default function JsonToTS(json: any, userOptions?: Options): string[] {
   const names = getNames(typeStructure, options.rootName).map((nameObj, i) => {
     if (options.prefix) {
       const rootType = typeStructure.types.find((type) => type.id === typeStructure.rootTypeId);
-      const prefixFromIndex = rootType?.arrayOfTypes ? 2 : 1;
-      if (i >= prefixFromIndex) {
-        nameObj.name = options.prefix + "_" + nameObj.name;
+      const currentType = typeStructure.types.find((type) => type.id === nameObj.id);
+      const shouldAddPrefix =
+        (!currentType.arrayOfTypes ||
+          currentType.arrayOfTypes.reduce((prev, cur) => {
+            if (
+              cur === "string" ||
+              cur === "number" ||
+              cur === "boolean" ||
+              cur === "null" ||
+              cur === "any" ||
+              cur === "unknown"
+            ) {
+              return prev;
+            }
+            // debugger;
+            return prev + 1;
+          }, 0)) &&
+        nameObj.name !== "any[]";
+      if (shouldAddPrefix) {
+        const prefixFromIndex = rootType?.arrayOfTypes ? 2 : 1;
+        if (i >= prefixFromIndex) {
+          nameObj.name = options.prefix + "_" + nameObj.name;
+        }
       }
     }
     return nameObj;
