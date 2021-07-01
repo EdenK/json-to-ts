@@ -50,9 +50,3 @@ export default function JsonToTS(json: any, userOptions?: Options): string[] {
 
 (<any>JsonToTS).default = JsonToTS;
 module.exports = JsonToTS;
-
-const json = JSON.parse(Buffer.from(readFileSync("./src/json/get-closed-positions.response.json")).toString("ascii"));
-
-const tsSchema = JsonToTS(json, { rootName: "test", prefix: "sdgsd" }).forEach((ts) => {
-  appendFileSync("./src/json/get-closed-positions.response.ts", ts);
-});
